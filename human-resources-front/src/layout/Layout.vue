@@ -8,11 +8,30 @@
           background-color="#545c64"
           text-color="#fff"
           active-text-color="#ffd04b">
-          <el-menu-item index="1">
+          <el-menu-item index="1" @click="$router.push('/company')">
             <el-icon><icon-menu /></el-icon>
             <span>企业管理</span>
           </el-menu-item>
-          <!-- 其他模块菜单项可以在这里添加 -->
+          <el-menu-item index="2" @click="$router.push('/organization')">
+            <el-icon><icon-menu /></el-icon>
+            <span>组织管理</span>
+          </el-menu-item>
+          <el-menu-item index="3" @click="$router.push('/department')">
+            <el-icon><icon-menu /></el-icon>
+            <span>部门管理</span>
+          </el-menu-item>
+          <el-menu-item index="4" @click="$router.push('/position')">
+            <el-icon><icon-menu /></el-icon>
+            <span>职位管理</span>
+          </el-menu-item>
+          <el-menu-item index="5" @click="$router.push('/employee')">
+            <el-icon><icon-menu /></el-icon>
+            <span>员工管理</span>
+          </el-menu-item>
+          <el-menu-item index="6" @click="$router.push('/onboarding')">
+            <el-icon><icon-menu /></el-icon>
+            <span>入职管理</span>
+          </el-menu-item>
         </el-menu>
       </el-aside>
       <el-container>
