@@ -1,0 +1,44 @@
+server:
+  port: 8080
+
+spring:
+  profiles:
+    active: dev
+  main:
+    allow-circular-references: true
+    banner-mode: off
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/human_resources?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&useSSL=false&allowPublicKeyRetrieval=true
+    username: root
+    password: 123456
+
+
+#mybatis:
+#  #mapper配置文件
+#  mapper-locations: classpath:com.xy.mapper/*.xml
+#  type-aliases-package: com.xy.entity
+#  configuration:
+#    #开启驼峰命名
+#    map-underscore-to-camel-case: true
+
+logging:
+  level:
+    com:
+      xy:
+        mapper: debug
+        service: info
+        controller: info
+
+mybatis-plus:
+  global-config:
+    db-config:
+      id-type: auto
+    banner: false
+  type-aliases-package: com.stdu.entity
+  mapper-locations: classpath:com.stdu.mapper/*.xml
+  configuration:
+    map-underscore-to-camel-case: true
+
+
+
