@@ -13,6 +13,9 @@ human-resources-back后端
 human-resources-front前端
 使用npm create vite@latest 创建项目 
 使用 vue javascript
+前端代码启动命令
+npm install
+npm run dev
 
 
 第一阶段：核心基础模块
