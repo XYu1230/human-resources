@@ -6,3 +6,27 @@
 使用
 git clone https://github.com/XYu1230/human-resources.git
 克隆到本地
+
+human-resources-back后端
+使用springboot java版本17 JDK版本22
+
+human-resources-front前端
+使用npm create vite@latest 创建项目 
+使用 vue javascript
+
+
+第一阶段：核心基础模块
+
+企业、组织、部门、职位、员工、入职
+
+第二阶段：生命周期管理
+
+转正、调岗、离职、合同、档案、成长
+
+第三阶段：业务支撑模块
+
+奖惩、考核、体检、通知
+
+第四阶段：配置与报表
+
+字段管理、报表配置
