@@ -7,3 +7,10 @@
 使用
 git clone https://github.com/XYu1230/human-resources.git
 克隆到本地
+
+human-resources-back后端
+使用springboot java版本17 JDK版本22
+
+human-resources-front前端
+使用npm create vite@latest 创建项目 
+使用 vue javascript
