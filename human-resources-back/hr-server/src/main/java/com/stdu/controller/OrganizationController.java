@@ -1,7 +1,7 @@
 package com.stdu.controller;
 
-import com.stdu.common.Result;
 import com.stdu.entity.Organization;
+import com.stdu.result.Result;
 import com.stdu.service.OrganizationService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;

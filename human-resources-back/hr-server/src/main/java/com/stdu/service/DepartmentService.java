@@ -1,7 +1,6 @@
 package com.stdu.service;
 
 import com.stdu.entity.Department;
-import com.baomidou.mybatisplus.extension.service.IService;
 
 import java.util.List;
 

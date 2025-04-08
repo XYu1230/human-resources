@@ -1,4 +1,4 @@
-package com.stdu.common;
+package com.stdu.result;
 
 import lombok.Data;
 

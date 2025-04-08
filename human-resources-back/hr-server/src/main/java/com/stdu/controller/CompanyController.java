@@ -1,13 +1,12 @@
 package com.stdu.controller;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.stdu.common.Result;
 import com.stdu.entity.Company;
+import com.stdu.result.Result;
 import com.stdu.service.CompanyService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.HashMap;
 import java.util.Map;
 
