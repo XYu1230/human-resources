@@ -17,7 +17,7 @@ const routes = [
         path: 'organization',
         name: 'OrganizationManage',
         component: () => import('../views/organization/OrganizationManage.vue'),
-        meta: { title: '组织管理' }
+        meta: { title: '组织架构' }
       },
       {
         path: 'department',

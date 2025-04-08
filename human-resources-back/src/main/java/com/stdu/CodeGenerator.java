@@ -13,7 +13,7 @@ import java.util.Collections;
 public class CodeGenerator {
     public static void main(String[] args) {
         String database = "jdbc:mysql://localhost:3306/human_resources?useSSL=false";
-        String table = "company";
+        String table = "organization";
         String tablePrefix = "tb_";
         String path = "C:\\Users\\lenovo\\Desktop\\stdu\\XYu1230\\human-resources\\human-resources-back\\src\\main";
 

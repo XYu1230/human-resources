@@ -7,7 +7,7 @@ import com.stdu.entity.Company;
 /**
  * 企业管理服务接口
  */
-public interface CompanyService extends IService<Company> {
+public interface CompanyService{
 
     /**
      * 分页查询企业列表

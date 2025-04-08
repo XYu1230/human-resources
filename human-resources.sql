@@ -25,7 +25,7 @@ CREATE TABLE organization (
     level INT DEFAULT 1 COMMENT '组织层级',
     company_id BIGINT NOT NULL COMMENT '所属企业ID',
     status TINYINT DEFAULT '1' COMMENT '组织状态(1启用/0禁用)',
-    FOREIGN KEY (company_id) REFERENCES company(id)
+    FOREIGN KEY (company_id) REFERENCES company(id) 
 ) COMMENT='组织架构表';
 
 -- 部门表
@@ -33,11 +33,10 @@ CREATE TABLE department (
     id BIGINT PRIMARY KEY AUTO_INCREMENT COMMENT '部门ID',
     name VARCHAR(100) NOT NULL COMMENT '部门名称',
     code VARCHAR(50) UNIQUE COMMENT '部门编码',
-    organization_id BIGINT NOT NULL COMMENT '所属组织ID',
+    company_id BIGINT COMMENT '所属企业ID',
     leader_id BIGINT DEFAULT NULL COMMENT '部门负责人ID（员工）',
-    parent_id BIGINT DEFAULT NULL COMMENT '上级部门ID',
     status TINYINT DEFAULT '1' COMMENT '部门状态(1启用/0禁用)',
-    FOREIGN KEY (organization_id) REFERENCES organization(id)
+    FOREIGN KEY (company_id) REFERENCES company(id)
 ) COMMENT='部门信息表';
 
 -- 职位表
@@ -64,13 +63,13 @@ INSERT INTO organization (name, parent_id, level, company_id, status) VALUES
 ('测试部', 2, 3, 1, 1),
 ('人事部', 3, 3, 1, 1);
 
-INSERT INTO department (name, code, organization_id, leader_id, parent_id, status) VALUES
-('研发一组', 'RD101', 4, NULL, NULL, 1),
-('研发二组', 'RD102', 4, NULL, NULL, 1),
-('功能测试组', 'QA201', 5, NULL, NULL, 1),
-('自动化测试组', 'QA202', 5, NULL, NULL, 1),
-('招聘组', 'HR301', 6, NULL, NULL, 1),
-('员工关系组', 'HR302', 6, NULL, NULL, 1);
+INSERT INTO department (name, code, company_id, leader_id, status) VALUES
+('研发一组', 'RD101', 1,  NULL, 1),
+('研发二组', 'RD102', 1,  NULL, 1),
+('功能测试组', 'QA201', 1,  NULL, 1),
+('自动化测试组', 'QA202', 1, NULL, 1),
+('招聘组', 'HR301', 1, NULL,1),
+('员工关系组', 'HR302', 1,NULL, 1);
 
 INSERT INTO position (name, code, description, department_id) VALUES
 ('Java开发工程师', 'DEV001', '负责后台服务开发与维护', 1),

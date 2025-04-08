@@ -3,7 +3,7 @@
     <el-container>
       <el-aside width="200px">
         <el-menu
-          default-active="1"
+          :default-active="activeIndex"
           class="el-menu-vertical"
           background-color="#545c64"
           text-color="#fff"
@@ -14,7 +14,7 @@
           </el-menu-item>
           <el-menu-item index="2" @click="$router.push('/organization')">
             <el-icon><icon-menu /></el-icon>
-            <span>组织管理</span>
+            <span>组织架构</span>
           </el-menu-item>
           <el-menu-item index="3" @click="$router.push('/department')">
             <el-icon><icon-menu /></el-icon>
@@ -48,6 +48,30 @@
 
 <script setup>
 import { Menu as IconMenu } from '@element-plus/icons-vue'
+import { ref, watch } from 'vue'
+import { useRoute } from 'vue-router'
+
+const route = useRoute()
+const activeIndex = ref('1')
+
+// 根据路由路径设置激活菜单项
+const setActiveMenu = (path) => {
+  const routeMap = {
+    '/company': '1',
+    '/organization': '2',
+    '/department': '3',
+    '/position': '4',
+    '/employee': '5',
+    '/onboarding': '6'
+  }
+  activeIndex.value = routeMap[path] || '1'
+}
+
+// 初始化和监听路由变化
+setActiveMenu(route.path)
+watch(() => route.path, (newPath) => {
+  setActiveMenu(newPath)
+})
 </script>
 
 <style scoped>
