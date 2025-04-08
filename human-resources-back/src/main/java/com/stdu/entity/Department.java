@@ -37,7 +37,7 @@ public class Department implements Serializable {
     /**
      * 所属组织ID
      */
-    private Long organizationId;
+    private Long companyId;
 
     /**
      * 部门负责人ID（员工）
@@ -45,12 +45,7 @@ public class Department implements Serializable {
     private Long leaderId;
 
     /**
-     * 上级部门ID
-     */
-    private Long parentId;
-
-    /**
      * 部门状态(1启用/0禁用)
      */
-    private Byte status;
+    private int status;
 }
