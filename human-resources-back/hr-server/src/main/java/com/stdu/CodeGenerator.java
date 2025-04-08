@@ -13,7 +13,7 @@ public class CodeGenerator {
         String database = "jdbc:mysql://localhost:3306/human_resources?useSSL=false";
         String table = "organization";
         String tablePrefix = "tb_";
-        String path = "C:\\Users\\lenovo\\Desktop\\stdu\\XYu1230\\human-resources\\human-resources-back\\src\\main";
+        String path = "C:\\Users\\lenovo\\Desktop\\stdu\\XYu1230\\human-resources\\human-resources-back\\hr-server\\src\\main";
 
         //取到当前java文件的绝对路径
         FastAutoGenerator.create(database, "root", "123456")
