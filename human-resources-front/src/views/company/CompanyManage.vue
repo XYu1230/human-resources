@@ -110,7 +110,7 @@
 <script setup>
 import { ref, reactive, onMounted } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
-import axios from 'axios'
+import companyApi from '@/api/company.js'
 
 // 表格数据
 const tableData = ref([])
@@ -172,10 +172,9 @@ const fetchCompanyList = async () => {
       ...searchForm
     }
     
-    // 使用localhost:8080作为后端地址
-    const response = await axios.get('http://localhost:8080/api/company/list', { params })
-    tableData.value = response.data.data.records || []
-    total.value = response.data.data.total || 0
+    const response = await companyApi.getCompanyList(params)
+    tableData.value = response.data.records || []
+    total.value = response.data.total || 0
     console.log('获取企业列表成功:', response.data.records)
   } catch (error) {
     console.error('获取企业列表失败:', error)
@@ -252,61 +251,58 @@ const submitForm = async () => {
     if (valid) {
       try {
         if (dialogType.value === 'add') {
-          // 新增企业
-          await axios.post('http://localhost:8080/api/company', companyForm)
-          ElMessage.success('新增企业成功')
+          await companyApi.addCompany(companyForm)
+          ElMessage.success('新增成功')
         } else {
-          // 编辑企业
-          await axios.put(`http://localhost:8080/api/company/${companyForm.id}`, companyForm)
-          ElMessage.success('编辑企业成功')
+          await companyApi.updateCompany(companyForm.id, companyForm)
+          ElMessage.success('更新成功')
         }
         dialogVisible.value = false
         fetchCompanyList()
       } catch (error) {
-        console.error('操作失败:', error)
-        ElMessage.error('操作失败')
+        console.error('保存企业失败:', error)
+        ElMessage.error('保存企业失败')
       }
     }
   })
 }
 
 // 删除企业
-const handleDelete = (row) => {
-  ElMessageBox.confirm(
-    '确定要删除该企业吗？',
-    '警告',
-    {
+const handleDelete = async (row) => {
+  try {
+    await ElMessageBox.confirm('确认删除该企业吗?', '提示', {
       confirmButtonText: '确定',
       cancelButtonText: '取消',
-      type: 'warning',
+      type: 'warning'
+    })
+    await companyApi.deleteCompany(row.id)
+    ElMessage.success('删除成功')
+    fetchCompanyList()
+  } catch (error) {
+    if (error !== 'cancel') {
+      console.error('删除企业失败:', error)
+      ElMessage.error('删除企业失败')
     }
-  ).then(async () => {
-    try {
-      await axios.delete(`http://localhost:8080/api/company/${row.id}`)
-      ElMessage.success('删除成功')
-      fetchCompanyList()
-    } catch (error) {
-      console.error('删除失败:', error)
-      ElMessage.error('删除失败')
-    }
-  }).catch(() => {
-    // 取消删除
-  })
+  }
 }
 
-// 修改企业状态
+// 更改状态
 const handleStatusChange = async (row) => {
   const newStatus = row.status === 1 ? 0 : 1
-  const statusText = newStatus === 1 ? '启用' : '禁用'
-  
   try {
-    await axios.put(`http://localhost:8080/api/company/${row.id}/status`, { status: newStatus })
-    ElMessage.success(`${statusText}成功`)
-    // 更新本地数据
-    row.status = newStatus
+    await ElMessageBox.confirm(`确认要${newStatus === 1 ? '启用' : '禁用'}该企业吗?`, '提示', {
+      confirmButtonText: '确定',
+      cancelButtonText: '取消',
+      type: 'warning'
+    })
+    await companyApi.updateCompanyStatus(row.id, newStatus)
+    ElMessage.success('状态更改成功')
+    fetchCompanyList()
   } catch (error) {
-    console.error(`${statusText}失败:`, error)
-    ElMessage.error(`${statusText}失败`)
+    if (error !== 'cancel') {
+      console.error('更改状态失败:', error)
+      ElMessage.error('更改状态失败')
+    }
   }
 }
 </script>

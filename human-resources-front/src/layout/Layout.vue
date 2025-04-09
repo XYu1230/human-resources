@@ -36,7 +36,21 @@
       </el-aside>
       <el-container>
         <el-header style="text-align: center; font-size: 20px; line-height: 60px;">
-          人力资源管理系统
+          <div class="header-container">
+            <div class="title">人力资源管理系统</div>
+            <div class="user-info">
+              <el-dropdown @command="handleCommand">
+                <span class="user-dropdown-link">
+                  {{ userName }}<el-icon class="el-icon--right"><arrow-down /></el-icon>
+                </span>
+                <template #dropdown>
+                  <el-dropdown-menu>
+                    <el-dropdown-item command="logout">退出登录</el-dropdown-item>
+                  </el-dropdown-menu>
+                </template>
+              </el-dropdown>
+            </div>
+          </div>
         </el-header>
         <el-main>
           <router-view />
@@ -47,12 +61,44 @@
 </template>
 
 <script setup>
-import { Menu as IconMenu } from '@element-plus/icons-vue'
-import { ref, watch } from 'vue'
-import { useRoute } from 'vue-router'
+import { Menu as IconMenu, ArrowDown } from '@element-plus/icons-vue'
+import { ref, watch, onMounted, computed } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
+import { ElMessageBox } from 'element-plus'
 
 const route = useRoute()
+const router = useRouter()
 const activeIndex = ref('1')
+
+// 获取用户名
+const userName = computed(() => {
+  const userStr = localStorage.getItem('user')
+  if (!userStr) return '用户'
+  
+  try {
+    const user = JSON.parse(userStr)
+    return user.realName || user.username || '用户'
+  } catch (e) {
+    return '用户'
+  }
+})
+
+// 处理下拉菜单命令
+const handleCommand = (command) => {
+  if (command === 'logout') {
+    ElMessageBox.confirm('确定要退出登录吗?', '提示', {
+      confirmButtonText: '确定',
+      cancelButtonText: '取消',
+      type: 'warning'
+    }).then(() => {
+      // 清除token和用户信息
+      localStorage.removeItem('token')
+      localStorage.removeItem('user')
+      // 重定向到登录页
+      router.push('/login')
+    }).catch(() => {})
+  }
+}
 
 // 根据路由路径设置激活菜单项
 const setActiveMenu = (path) => {
@@ -79,6 +125,7 @@ watch(() => route.path, (newPath) => {
   background-color: #B3C0D1;
   color: #333;
   line-height: 60px;
+  padding: 0 20px;
 }
 
 .el-aside {
@@ -88,5 +135,20 @@ watch(() => route.path, (newPath) => {
 
 .el-menu-vertical {
   height: 100%;
+}
+
+.header-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.user-info {
+  font-size: 14px;
+}
+
+.user-dropdown-link {
+  cursor: pointer;
+  color: #409EFF;
 }
 </style>

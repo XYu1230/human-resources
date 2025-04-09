@@ -108,7 +108,21 @@
 <script setup>
 import { ref, onMounted, computed } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
-import axios from 'axios'
+// import axios from 'axios' // Removed axios import
+// Added departmentApi import - assuming named exports
+import {
+  getDepartmentList,
+  addDepartment,
+  updateDepartment,
+  deleteDepartment,
+  toggleDepartmentStatus,
+  // getDepartmentTree, // Assuming not used directly in this component for now
+  // getDepartmentDetail // Assuming not used directly in this component for now
+} from '@/api/department.js'
+// Assuming companyApi is needed for company list/details
+import companyApi from '@/api/company.js'
+// Assuming employee related API might be needed (using a placeholder)
+// import { getSimpleEmployeeList } from '@/api/employee.js'
 
 const departmentList = ref([])
 const employeeList = ref([])
@@ -122,8 +136,9 @@ const currentCompany = ref(null)
 // 获取公司列表
 const getCompanyList = async () => {
   try {
-    const res = await axios.get('http://localhost:8080/api/company/list')
-    companyList.value = res.data.data.records
+    // const res = await axios.get('http://localhost:8080/api/company/list')
+    const res = await companyApi.getCompanyList()
+    companyList.value = res.data.records
     if (companyList.value.length > 0 && !selectedCompanyId.value) {
       selectedCompanyId.value = companyList.value[0].id
       await handleCompanyChange(selectedCompanyId.value)
@@ -138,8 +153,9 @@ const getCompanyList = async () => {
 const handleCompanyChange = async (companyId) => {
   try {
     // 获取当前选中的公司信息
-    const res = await axios.get(`http://localhost:8080/api/company/${companyId}`)
-    currentCompany.value = res.data.data
+    // const res = await axios.get(`http://localhost:8080/api/company/${companyId}`)
+    const res = await companyApi.getCompanyDetail(companyId)
+    currentCompany.value = res.data
     // 重新获取部门数据
     getDepartmentData()
     // 获取员工列表
@@ -157,8 +173,9 @@ const getDepartmentData = async () => {
     return
   }
   try {
-    const res = await axios.get(`http://localhost:8080/api/department/list/${selectedCompanyId.value}`)
-    departmentList.value = res.data.data
+    // const res = await axios.get(`http://localhost:8080/api/department/list/${selectedCompanyId.value}`)
+    const res = await getDepartmentList(selectedCompanyId.value)
+    departmentList.value = res.data
   } catch (error) {
     console.error('获取部门数据失败：', error)
     ElMessage.error('获取部门数据失败')
@@ -184,10 +201,12 @@ const handleSubmit = async () => {
       try {
         const formData = { ...form.value, companyId: selectedCompanyId.value }
         if (formData.id) {
-          await axios.put(`http://localhost:8080/api/department/${formData.id}`, formData)
+          // await axios.put(`http://localhost:8080/api/department/${formData.id}`, formData)
+          await updateDepartment(formData.id, formData)
           ElMessage.success('更新成功')
         } else {
-          await axios.post('http://localhost:8080/api/department', formData)
+          // await axios.post('http://localhost:8080/api/department', formData)
+          await addDepartment(formData)
           ElMessage.success('添加成功')
         }
         dialogVisible.value = false
@@ -216,8 +235,6 @@ const resetForm = () => {
   }
 }
 
-
-
 // 新增部门
 const handleAdd = () => {
   dialogTitle.value = '新增部门'
@@ -236,24 +253,31 @@ const handleEdit = (row) => {
 const handleDelete = async (row) => {
   try {
     await ElMessageBox.confirm('确认删除该部门吗？')
-    await axios.delete(`http://localhost:8080/api/department/${row.id}`)
+    // await axios.delete(`http://localhost:8080/api/department/${row.id}`)
+    await deleteDepartment(row.id)
     ElMessage.success('删除成功')
     getDepartmentData()
   } catch (error) {
-    console.error('删除部门失败：', error)
-    ElMessage.error('删除部门失败')
+     if (error !== 'cancel') {
+      console.error('删除部门失败：', error)
+      ElMessage.error('删除部门失败')
+    }
   }
 }
 
 // 切换状态
 const handleStatusChange = async (row) => {
+  const newStatus = row.status === 1 ? 0 : 1
   try {
-    await axios.put(`http://localhost:8080/api/department/${row.id}/status`, { status: row.status })
+    // await axios.put(`http://localhost:8080/api/department/${row.id}/status`, { status: newStatus })
+    await toggleDepartmentStatus(row.id, newStatus)
     ElMessage.success('状态更新成功')
+    // No need to manually update row.status, getDepartmentData() will refresh
   } catch (error) {
     console.error('更新状态失败：', error)
-    row.status = row.status === 1 ? 0 : 1 // 恢复状态
+    // Revert status optimistically on UI error is complex, better to just refetch
     ElMessage.error('更新状态失败')
+    getDepartmentData() // Refetch data to show correct state after error
   }
 }
 
@@ -273,11 +297,17 @@ const rules = {
 const getEmployeeList = async () => {
   if (!selectedCompanyId.value) return
   try {
-    // 假设接口为 /api/employee/simple/company/{companyId}
-    const res = await axios.get(`http://localhost:8080/api/employee/simple/company/${selectedCompanyId.value}`)
-    employeeList.value = res.data.data || []
+    // Placeholder: Replace with actual API call using selectedCompanyId.value if needed
+    // const res = await getSimpleEmployeeList({ companyId: selectedCompanyId.value });
+    // employeeList.value = res.data;
+    // Mocking employee list for now
+    employeeList.value = [
+      { id: 'emp1', name: '张三' },
+      { id: 'emp2', name: '李四' }
+    ]
+    console.log('获取员工列表 (mocked)')
   } catch (error) {
-    console.error('获取员工列表失败：', error)
+    console.error('获取员工列表失败:', error)
     ElMessage.error('获取员工列表失败')
   }
 }

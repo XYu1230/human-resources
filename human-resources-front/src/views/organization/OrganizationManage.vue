@@ -93,7 +93,17 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
-import axios from 'axios'
+// import axios from 'axios' // Removed axios import
+// Added organizationApi import - assuming named exports
+import {
+  getOrganizationTree,
+  addOrganization,
+  updateOrganization,
+  deleteOrganization,
+  toggleOrganizationStatus
+} from '@/api/organization.js'
+// Assuming companyApi is needed for company list/details
+import companyApi from '@/api/company.js'
 
 const organizationList = ref([])
 const flatOrganizationList = ref([])
@@ -139,8 +149,9 @@ const rules = {
 // 获取公司列表数据
 const getCompanyList = async () => {
   try {
-    const res = await axios.get('http://localhost:8080/api/company/list')
-    companyList.value = res.data.data.records
+    // const res = await axios.get('http://localhost:8080/api/company/list')
+    const res = await companyApi.getCompanyList()
+    companyList.value = res.data.records
     console.log(companyList.value)
     if (companyList.value.length > 0 && !selectedCompanyId.value) {
       selectedCompanyId.value = companyList.value[0].id
@@ -156,13 +167,15 @@ const getCompanyList = async () => {
 const handleCompanyChange = async (companyId) => {
   try {
     // 获取选中公司的详细信息
-    const companyRes = await axios.get(`http://localhost:8080/api/company/${companyId}`)
-    currentCompany.value = companyRes.data.data
+    // const companyRes = await axios.get(`http://localhost:8080/api/company/${companyId}`)
+    const companyRes = await companyApi.getCompanyDetail(companyId)
+    currentCompany.value = companyRes.data
     form.value.companyId = companyId
 
     // 获取该公司的组织树形数据
-    const res = await axios.get(`http://localhost:8080/api/organization/tree?companyId=${companyId}`)
-    organizationList.value = res.data.data
+    // const res = await axios.get(`http://localhost:8080/api/organization/tree?companyId=${companyId}`)
+    const res = await getOrganizationTree({ companyId: companyId })
+    organizationList.value = res.data
     // 转换为扁平数组
     flatOrganizationList.value = flattenOrganizations(organizationList.value)
   } catch (error) {
@@ -195,24 +208,34 @@ const handleEdit = (row) => {
 const handleDelete = async (row) => {
   try {
     await ElMessageBox.confirm('确认删除该组织吗？')
-    await axios.delete(`http://localhost:8080/api/organization/${row.id}`)
+    // await axios.delete(`http://localhost:8080/api/organization/${row.id}`)
+    await deleteOrganization(row.id)
     ElMessage.success('删除成功')
     getOrganizationData()
   } catch (error) {
-    console.error('删除组织失败：', error)
-    ElMessage.error('删除组织失败')
+     if (error !== 'cancel') {
+      console.error('删除组织失败：', error)
+      ElMessage.error('删除组织失败')
+    }
   }
 }
 
 // 切换状态
 const handleStatusChange = async (row) => {
+  const newStatus = row.status === 1 ? 0 : 1
   try {
-    await axios.put(`http://localhost:8080/api/organization/${row.id}/status`, { status: row.status })
+    // await axios.put(`http://localhost:8080/api/organization/${row.id}/status`, { status: row.status })
+    // NOTE: The original code used row.status, which might be the OLD status before the switch was toggled.
+    // Using newStatus ensures we send the intended new state to the backend.
+    await toggleOrganizationStatus(row.id, newStatus)
     ElMessage.success('状态更新成功')
+     // Refetch data for consistency after status change
+    getOrganizationData()
   } catch (error) {
     console.error('更新状态失败：', error)
-    row.status = row.status === 1 ? 0 : 1 // 恢复状态
+    // Revert status optimistically on UI error is complex, better to just refetch
     ElMessage.error('更新状态失败')
+    getOrganizationData() // Refetch data to show correct state after error
   }
 }
 
@@ -222,11 +245,14 @@ const handleSubmit = async () => {
   await formRef.value.validate(async (valid) => {
     if (valid) {
       try {
+        // Ensure companyId is included (already handled in handleCompanyChange)
         if (form.value.id) {
-          await axios.put(`http://localhost:8080/api/organization/${form.value.id}`, form.value)
+          // await axios.put(`http://localhost:8080/api/organization/${form.value.id}`, form.value)
+          await updateOrganization(form.value.id, form.value)
           ElMessage.success('更新成功')
         } else {
-          await axios.post('http://localhost:8080/api/organization', form.value)
+          // await axios.post('http://localhost:8080/api/organization', form.value)
+          await addOrganization(form.value)
           ElMessage.success('添加成功')
         }
         dialogVisible.value = false

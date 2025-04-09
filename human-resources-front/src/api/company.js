@@ -1,37 +1,5 @@
-// 暂时没用到这三个.js文件
 
-import axios from 'axios'
-
-// 设置基础URL，指向后端服务器
-const baseURL = 'http://localhost:8080'
-
-// 创建axios实例
-const request = axios.create({
-  baseURL,
-  timeout: 10000
-})
-
-// 请求拦截器
-request.interceptors.request.use(
-  config => {
-    // 可以在这里添加token等认证信息
-    return config
-  },
-  error => {
-    return Promise.reject(error)
-  }
-)
-
-// 响应拦截器
-request.interceptors.response.use(
-  response => {
-    // 可以统一处理响应数据
-    return response.data
-  },
-  error => {
-    return Promise.reject(error)
-  }
-)
+import request from './request'
 
 // 企业管理相关接口
 export default {

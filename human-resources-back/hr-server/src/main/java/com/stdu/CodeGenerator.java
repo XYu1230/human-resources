@@ -11,7 +11,7 @@ import java.util.Collections;
 public class CodeGenerator {
     public static void main(String[] args) {
         String database = "jdbc:mysql://localhost:3306/human_resources?useSSL=false";
-        String table = "organization";
+        String table = "user";
         String tablePrefix = "tb_";
         String path = "C:\\Users\\lenovo\\Desktop\\stdu\\XYu1230\\human-resources\\human-resources-back\\hr-server\\src\\main";
 

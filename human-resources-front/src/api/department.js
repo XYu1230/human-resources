@@ -1,11 +1,10 @@
-import request from '@/utils/request'
+import request from './request'
 
-// 获取部门列表
-export function getDepartmentList(params) {
+// 获取指定公司的部门列表
+export function getDepartmentList(companyId) {
   return request({
-    url: '/department/list',
-    method: 'get',
-    params
+    url: `/department/list/${companyId}`,
+    method: 'get'
   })
 }
 
@@ -21,16 +20,16 @@ export function getDepartmentTree(params) {
 // 添加部门
 export function addDepartment(data) {
   return request({
-    url: '/department/add',
+    url: '/department',
     method: 'post',
     data
   })
 }
 
 // 更新部门
-export function updateDepartment(data) {
+export function updateDepartment(id, data) {
   return request({
-    url: '/department/update',
+    url: `/department/${id}`,
     method: 'put',
     data
   })
@@ -39,7 +38,7 @@ export function updateDepartment(data) {
 // 删除部门
 export function deleteDepartment(id) {
   return request({
-    url: `/department/delete/${id}`,
+    url: `/department/${id}`,
     method: 'delete'
   })
 }
@@ -47,16 +46,16 @@ export function deleteDepartment(id) {
 // 切换部门状态
 export function toggleDepartmentStatus(id, status) {
   return request({
-    url: '/department/status',
+    url: `/department/${id}/status`,
     method: 'put',
-    data: { id, status }
+    data: { status }
   })
 }
 
 // 获取部门详情
 export function getDepartmentDetail(id) {
   return request({
-    url: `/department/detail/${id}`,
+    url: `/department/${id}`,
     method: 'get'
   })
 }

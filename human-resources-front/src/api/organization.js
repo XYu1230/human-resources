@@ -1,4 +1,4 @@
-import request from '@/utils/request'
+import request from './request'
 
 // 获取组织列表
 export function getOrganizationList(params) {
@@ -21,16 +21,16 @@ export function getOrganizationTree(params) {
 // 添加组织
 export function addOrganization(data) {
   return request({
-    url: '/organization/add',
+    url: '/organization',
     method: 'post',
     data
   })
 }
 
 // 更新组织
-export function updateOrganization(data) {
+export function updateOrganization(id, data) {
   return request({
-    url: '/organization/update',
+    url: `/organization/${id}`,
     method: 'put',
     data
   })
@@ -39,7 +39,7 @@ export function updateOrganization(data) {
 // 删除组织
 export function deleteOrganization(id) {
   return request({
-    url: `/organization/delete/${id}`,
+    url: `/organization/${id}`,
     method: 'delete'
   })
 }
@@ -47,8 +47,8 @@ export function deleteOrganization(id) {
 // 切换组织状态
 export function toggleOrganizationStatus(id, status) {
   return request({
-    url: '/organization/status',
+    url: `/organization/${id}/status`,
     method: 'put',
-    data: { id, status }
+    data: { status }
   })
 }

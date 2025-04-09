@@ -86,10 +86,13 @@ CREATE TABLE user (
   `password` VARCHAR(255) NOT NULL COMMENT '加密存储的密码',
   `role_type` VARCHAR(30) NOT NULL COMMENT '用户类型（1-系统管理员/2-人力资源主管/3-普通用户）',
   `real_name` VARCHAR(50) DEFAULT NULL COMMENT '用户真实姓名（可选）',
-  `status` TINYINT(1) NOT NULL DEFAULT 1 COMMENT '状态（0-禁用，1-启用）',
+  `status` TINYINT NOT NULL DEFAULT 1 COMMENT '状态（0-禁用，1-启用）',
   `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `updated_at` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '最近更新时间',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='用户表';
+
+insert into user (username,`password`,role_type,`status`) VALUES
+('admin','123456',1,1)
 
 

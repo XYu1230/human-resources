@@ -25,7 +25,7 @@ spring:
 logging:
   level:
     com:
-      xy:
+      stdu:
         mapper: debug
         service: info
         controller: info
@@ -39,6 +39,16 @@ mybatis-plus:
   mapper-locations: classpath:com.stdu.mapper/*.xml
   configuration:
     map-underscore-to-camel-case: true
+
+
+hr:
+  jwt:
+    # 设置jwt签名加密时使用的秘钥
+    admin-secret-key: lxylzhzbtnb666
+    # 设置前端传递过来的令牌名称
+    admin-token-name: token
+    # 设置jwt过期时间
+    admin-ttl: 7200000
 
 
 
