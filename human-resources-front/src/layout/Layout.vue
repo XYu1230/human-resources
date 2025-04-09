@@ -149,6 +149,8 @@ watch(() => route.path, (newPath) => {
 
 .user-dropdown-link {
   cursor: pointer;
-  color: #409EFF;
+  color:rgb(71, 5, 252);
+  font-size: 16px;
+  margin-top: 18px; 
 }
 </style>
